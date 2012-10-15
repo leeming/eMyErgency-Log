@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<title>eMyErgency Log Demo</title>
+		<link href="http://ajax.googleapis.com/ajax/libs/dojo/1.8.0/dojox/mobile/themes/iphone/iphone.css" rel="stylesheet" />
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/dojo/1.8.0/dojo/dojo.js" djConfig="isDebug:true, parseOnLoad:true"></script>
+        <script type="text/javascript" src="main.js"></script>
+<!--<script type="text/javascript" src="src.js"></script>-->
+	</head>
+
+<body>
+
+
+<div dojoType="dojox.mobile.View" id="titleView" selected="true">
+
+    <h1 dojoType="dojox.mobile.Heading" fixed="top">eMyErgency Log</h1>
+
+<div id="view1" data-dojo-type="dojox.mobile.View" selected="true">
+  <ul data-dojo-type="dojox.mobile.RoundRectList">
+    <li data-dojo-type="dojox.mobile.ListItem" moveTo="selectIncidentView" transition="slide">
+      Incident : <span id="incidentLabel">(Please select)</span>
+    </li>
+  </ul>
+</div>
+
+
+
+	<ul dojoType="dojox.mobile.IconContainer">
+		<li dojoType="dojox.mobile.IconItem" label="Phone Call" 
+		  icon="icon.png" moveTo="logPhoneView" transition="slide" iconPos="0,0,65,65"></li>
+		<li dojoType="dojox.mobile.IconItem" label="Decision" 
+		  icon="icon.png" moveTo="logDecisionView" transition="slide" iconPos="0,0,65,65"></li>
+		<li dojoType="dojox.mobile.IconItem" label="Memo" 
+		  icon="icon.png" moveTo="logMemoView" transition="slide" iconPos="0,0,65,65"></li>
+		<li dojoType="dojox.mobile.IconItem" label="E-mail" 
+		  icon="icon.png" moveTo="logEmailView" transition="slide" iconPos="0,0,65,65"></li>
+		<li dojoType="dojox.mobile.IconItem" label="Picture" 
+		  icon="icon.png" moveTo="logPictureView" transition="slide" iconPos="0,0,65,65"></li>
+		<li dojoType="dojox.mobile.IconItem" label="Other" 
+		  icon="icon.png" moveTo="logOtherView" transition="slide" iconPos="0,0,65,65"></li>
+		<li dojoType="dojox.mobile.IconItem" label="Generate Report" 
+		  icon="icon.png" iconPos="0,0,65,65" href="https://docs.google.com/spreadsheet/ccc?key=0AoMGj1IlIlmbdERRVXRMS2cyME5PN3BaZEZVSElSblE"></li>
+	</ul>
+
+</div>
+
+<!-- Incident selector view -->
+<div id="selectIncidentView" data-dojo-type="dojox.mobile.View">
+  <h1 data-dojo-type="dojox.mobile.Heading" back="Back" moveTo="titleView">Select Incident</h1>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Add new</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+		<input data-dojo-type="dojox.mobile.TextBox" placeHolder="Incident Name" id="incidentNameTxt" value="" />
+		<button dojoType="dojox.mobile.Button" class="mblBlueButton" onClick="addNewIncident()"
+		style="width: 100px">Add</button>
+    </div>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Existing Incidents</h2>
+	<div id="incidentListContainer"></div>
+
+</div>
+
+<!-- Decisions -->
+<div dojoType="dojox.mobile.ScrollableView" id="logDecisionView">
+
+
+	<h1 dojoType="dojox.mobile.Heading" label="My App" back="Back" moveTo="titleView">
+		Log Decision
+	</h1>
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory" id="incidentReminderDecision"></h2>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Event Timestamp</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+		<span id="decisionLogTimestamp"></span><br>
+		<button dojoType="dojox.mobile.Button" class="mblBlueButton" 
+			style="width: 100px" onClick="dijit.byId('timestampView').show(); return false;">
+			Set Timestamp
+		</button>
+	</div>
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Decision Made</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+
+		<textarea dojoType="dojox.mobile.TextArea" cols="20"></textarea>
+    </div>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Who With</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+
+		<textarea dojoType="dojox.mobile.TextArea" cols="20"></textarea>
+    </div>
+
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Flag as Important</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+        <div dojoType="dojox.mobile.Switch" value="off"></div>
+	</div>
+
+
+
+		<button dojoType="dojox.mobile.Button" class="mblBlueButton" 
+		style="width: 100px" onClick="submitPhoneLog()">Submit</button>
+
+</div>
+
+<!-- Phone -->
+<div dojoType="dojox.mobile.ScrollableView" id="logPhoneView" 
+		onBeforeTransitionIn="initView('incidentReminderPhone')">
+<!--
+<div dojoType="dojox.mobile.SwapView" selected="true">
+-->	
+	<h1 dojoType="dojox.mobile.Heading" label="My App" back="Back" moveTo="titleView">
+		Log Phone Call
+	</h1>
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory" id="incidentReminderPhone"></h2>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Event Timestamp</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+		<span id="phoneLogTimestamp"></span><br>
+		<button dojoType="dojox.mobile.Button" class="mblBlueButton" 
+			style="width: 100px" onClick="dijit.byId('timestampView').show(); return false;">
+			Set Timestamp
+		</button>
+	</div>
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Transcription</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+
+		<textarea dojoType="dojox.mobile.TextArea" cols="40"></textarea>
+    </div>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Call Direction</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+        <div dojoType="dojox.mobile.Switch" value="" leftLabel="In" rightLabel="Out"></div>
+
+	</div>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Name of contact</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+
+		<textarea dojoType="dojox.mobile.TextArea" cols="40"></textarea>
+	</div>
+
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Flag as Important</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+        <div dojoType="dojox.mobile.Switch" value="off"></div>
+	</div>
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Attach Audio</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+
+		<button dojoType="dojox.mobile.Button" class="mblBlueButton" 
+		style="width: 100px" onClick="dijit.byId('timestampView').show()">Attach Audio</button>
+	</div>
+
+
+		<button dojoType="dojox.mobile.Button" class="mblBlueButton" 
+		style="width: 100px" onClick="submitPhoneLog()">Submit</button>
+</div>
+
+
+<!--
+<div dojoType="dojox.mobile.SwapView">
+	TODO: There should be a list of the previous phone call events here
+</div>
+
+
+<div dojoType="dojox.mobile.PageIndicator" style="position:absolute; bottom:0px; background:transparent"></div>
+
+</div>
+-->
+
+<div dojoType="dojox.mobile.ScrollableView" id="logEmailView">
+	<h1 dojoType="dojox.mobile.Heading" label="My App" back="Back" moveTo="titleView">
+		Log Email
+	</h1>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">First Section</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+        Place some text here please
+    </div>
+</div>
+
+
+<div dojoType="dojox.mobile.ScrollableView" id="timestampView">
+	<h1 dojoType="dojox.mobile.Heading" label="My App" back="Back" moveTo="logPhoneView" id="testing">
+		Select Date &amp; Time
+	</h1>
+
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Date</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+		<div id="eventDate" dojoType="dojox.mobile.SpinWheelDatePicker"></div>
+    </div>
+
+    <h2 dojoType="dojox.mobile.RoundRectCategory">Time</h2>
+    <div dojoType="dojox.mobile.RoundRect">
+		<div id="eventTime" dojoType="dojox.mobile.SpinWheelTimePicker"></div>
+    </div>
+
+
+		<button dojoType="dojox.mobile.Button" class="mblBlueButton" 
+		style="width: 100px" onClick="saveTimestamp();">Done</button>
+
+</div>
+
+
+
+</body>
+</html>
